@@ -15,7 +15,7 @@
 (defonce result (atom ""))
 
 (defn roll-formula []
-  (go (let [repsonse (<! (http/get (str "http://localhost:3449/" @formula)))]
+  (go (let [repsonse (<! (http/get (str "/" @formula)))]
         (reset! result (:body repsonse)))))
 
 ;; -------------------------
