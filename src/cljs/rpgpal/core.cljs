@@ -12,11 +12,15 @@
 (enable-console-print!)
 
 (defonce formula (atom ""))
-(defonce result (atom ""))
+(defonce results (atom '()))
+
+(defn last-result []
+  (first @results))
+
 
 (defn roll-formula []
-  (go (let [repsonse (<! (http/get (str "/" @formula)))]
-        (reset! result (:body repsonse)))))
+  (go (let [response (<! (http/get (str "/" @formula)))]
+        (swap! results conj (:body response)))))
 
 ;; -------------------------
 ;; View components
@@ -37,21 +41,26 @@
 
 (defn formula-input []
   [:div
-   [restricted-input formula #"[0-9d+]*" {:on-key-down #(case (.-keyCode %)
+   [restricted-input formula #"[0-9d+\-]*" {:on-key-down #(case (.-keyCode %)
                                                          13 (roll-formula)
-                                                         nil)}]
-   [:button {:on-click #(roll-formula)} "Evaluate"]])
+                                                         nil)
+                                          :placeholder "Enter a dice formula to evaluate it"
+                                          :class "formula-input"}]])
 
+(defn results-view []
+  [:div.results
+   [:h4 (str "You rolled: " (last-result))]
+   [:h4 "Here are your 10 latest rolls"]
+   [:ul
+    (for [r (take 10 (rest @results))]
+      [:li r])]])
 ;; -------------------------
 ;; Views
 
 (defn home-page []
   [:div
-   [:h2 "Enter a dice formula below"]
-   [:div
-    [formula-input]
-    [:p "The formula you entered is: " @formula]
-    [:p "And the result is: " @result]]])
+   [formula-input]
+   [results-view]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])

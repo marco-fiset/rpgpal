@@ -1,7 +1,6 @@
 body {
   font-family: 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
-  max-width: 600px;
-  margin: 0 auto;
+    margin: 0 auto;
   padding-top: 72px;
   -webkit-font-smoothing: antialiased;
   font-size: 1.125em;
@@ -31,4 +30,24 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.results {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+}
+
+.results ul {
+    list-style-type: none;
+}
+
+.formula-input {
+    display: block;
+    margin: auto;
+    height: 50px;
+    width: 80%;
+    font-size: 34px;
+    font-family: consolas;
+    text-align: center;
 }
