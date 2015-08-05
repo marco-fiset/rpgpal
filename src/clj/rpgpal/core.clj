@@ -18,4 +18,4 @@
       (recur (roll formula) (inc i)))))
 
 (defn rolls-until [formula result]
-  (cons (roll-until formula result) (lazy-seq (rolls-until formula result))))
+  (repeatedly #(roll-until formula result)))
