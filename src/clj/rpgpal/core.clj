@@ -8,9 +8,14 @@
 (def rand-roller (r/map->RandomRoller {}))
 (def chan-roller (r/map->ChanRoller {:roller rand-roller :c roll-chan}))
 
-(go-loop []
-  (println (<! roll-chan))
-  (recur))
-
 (defn roll [formula]
-  (-> formula p/parse (e/eval-tree chan-roller)))
+  (-> formula p/parse (e/eval-tree rand-roller)))
+
+(defn roll-until [formula result]
+  (loop [r (roll formula) i 1]
+    (if (= result (:result r))
+      i
+      (recur (roll formula) (inc i)))))
+
+(defn rolls-until [formula result]
+  (cons (roll-until formula result) (lazy-seq (rolls-until formula result))))
