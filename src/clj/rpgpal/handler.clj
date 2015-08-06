@@ -9,6 +9,13 @@
             [environ.core :refer [env]]
             [rpgpal.core :refer [roll]]))
 
+(defn uuid [] (str (java.util.UUID/randomUUID)))
+
+(defn edn-response [data & [status]]
+  {:status (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body (pr-str data)})
+
 (def home-page
   (html
    [:html
@@ -27,8 +34,7 @@
 
 (defroutes routes
   (GET "/" [] home-page)
-  (GET "/:formula" [formula] (str (roll formula)))
-  (resources "/")
+  (GET "/:formula" [formula] (edn-response (assoc (roll formula) :id (uuid))))
   (not-found "Not Found"))
 
 (def app

@@ -25,8 +25,8 @@
       (is (= 3 (->> result :rolls (mapcat second) count)))))
   (testing "Dice rolls should be groupped by sides"
     (let [result (e/eval-tree [:add [:dice [:number "3"] [:number "6"]] [:dice [:number "4"] [:number "8"]]] roller)]
-      (is (= 3 (-> result :rolls :6 count)))
-      (is (= 4 (-> result :rolls :8 count))))))
+      (is (= 3 (-> result :rolls :d6 count)))
+      (is (= 4 (-> result :rolls :d8 count))))))
 
 (deftest eval-add-dice-rolls
   (testing "Dice rolls should be addded together"

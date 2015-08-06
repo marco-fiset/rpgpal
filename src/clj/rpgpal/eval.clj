@@ -27,7 +27,7 @@
   (let [times (read-string times-value)
         sides (read-string sides-value)
         rolls (r/roll-many (:roller result) times sides)]
-    (merge-results result (update-in rolls [:rolls] (fn [rolls] {(keyword sides-value) rolls})))))
+    (merge-results result (update-in rolls [:rolls] (fn [rolls] {(keyword (str "d" sides-value)) rolls})))))
 
 (defn- merge-results [r1 r2]
   (-> r1
