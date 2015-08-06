@@ -61,13 +61,13 @@ a:hover {
 }
 
 .rolls {
-    display: flex;
-    flex-flow: row wrap;
+    display: -webkit-flex;
+    -webkit-flex-flow: row wrap;
 }
 
 .roll {
-    display: flex;
-    flex-flow: column;
+    display: -webkit-flex;
+    -webkit-flex-flow: column;
 
     min-width: 90px;
     height: 90px;
