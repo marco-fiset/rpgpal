@@ -32,14 +32,14 @@ a:hover {
   text-decoration: underline;
 }
 
-.results {
-    max-width: 600px;
-    margin: auto;
-    text-align: center;
+.container {
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 .results ul {
     list-style-type: none;
+    padding: 0;
 }
 
 .formula-input {
@@ -47,7 +47,48 @@ a:hover {
     margin: auto;
     height: 50px;
     width: 80%;
+    padding-top: 8px;
+
     font-size: 34px;
-    font-family: consolas;
+    font-family: consolas, monospace;
     text-align: center;
+}
+
+.roll-result {
+    margin-top: 30px;
+    font-size: 76px;
+    text-align: center;
+}
+
+.rolls {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.roll {
+    display: flex;
+    flex-flow: column;
+
+    min-width: 90px;
+    height: 90px;
+    border: 1px solid black;
+    text-align: center;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.roll .formula {
+    display: inline;
+    font-size: 14px;
+}
+
+.roll .result {
+    margin-top: 8px;
+    margin-bottom: 5px;
+    font-size: 32px;
+}
+
+.roll .toggle-details {
+    display:block;
+    align-self: flex-end;
 }

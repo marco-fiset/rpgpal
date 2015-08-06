@@ -15,18 +15,25 @@
 (defonce results (atom '()))
 
 (defn last-result []
-  (first @results))
+  (dissoc (first @results) :id))
 
+(defn previous-rolls []
+  (rest @results))
+
+(defn ten-previous-rolls []
+  (take 10 (rest @results)))
 
 (defn roll-formula []
-  (go (let [response (<! (http/get (str "/" @formula)))]
-        (swap! results conj (:body response)))))
+  (go (let [formula @formula
+            response (<! (http/get (str "/" formula)))
+            body (:body response)]
+        (swap! results conj (assoc body :formula formula)))))
 
 ;; -------------------------
 ;; View components
 
 (defn input [atom opts]
-  (let [default {:type "text"
+  (let [default {:type      "text"
                  :on-change #(reset! atom (-> % .-target .-value))}
         options (merge default opts)]
     (fn []
@@ -42,18 +49,24 @@
 (defn formula-input []
   [:div
    [restricted-input formula #"[0-9d+\-]*" {:on-key-down #(case (.-keyCode %)
-                                                         13 (roll-formula)
-                                                         nil)
-                                          :placeholder "Enter a dice formula to evaluate it"
-                                          :class "formula-input"}]])
+                                                           13 (roll-formula)
+                                                           nil)
+                                            :placeholder "Enter a dice formula"
+                                            :class       "formula-input"}]])
+
+(defn roll-view [roll]
+  [:li.roll {:key (:id roll)}
+   [:div
+    [:p.formula (:formula roll)]
+    [:p.result (:result roll)]]])
 
 (defn results-view []
   [:div.results
-   [:h4 (str "You rolled: " (last-result))]
-   [:h4 "Here are your 10 latest rolls"]
-   [:ul
-    (for [r (take 10 (rest @results))]
-      [:li r])]])
+   [:div.roll-result (-> (last-result) :result str)]
+   [:h4 "Here are your previous rolls"]
+   [:ul.rolls
+    (for [r (previous-rolls)]
+      (roll-view r))]])
 ;; -------------------------
 ;; Views
 
@@ -63,7 +76,7 @@
    [results-view]])
 
 (defn current-page []
-  [:div [(session/get :current-page)]])
+  [:div.container [(session/get :current-page)]])
 
 ;; -------------------------
 ;; Routes
