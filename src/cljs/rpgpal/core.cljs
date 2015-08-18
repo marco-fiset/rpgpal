@@ -20,15 +20,28 @@
 (defn previous-rolls []
   (rest @results))
 
-(defn ten-previous-rolls []
-  (take 10 (rest @results)))
+(defn avg [coll]
+  (if (empty? coll)
+    0
+    (/ (reduce + coll) (count coll))))
+
+(defn get-rolls [die-type]
+  (->> @results (mapcat (comp die-type :rolls))
+       (filter identity)
+       (sort)))
+
+(def avg-rolls (comp avg get-rolls))
+(def roll-distribution (comp frequencies get-rolls))
 
 (defn roll-formula []
   (go (let [formula @formula
-            response (<! (http/get (str "/" formula)))
+            response (<! (http/get (str "/roll/" formula)))
             body (:body response)]
         (swap! results conj (assoc body :formula formula)))))
 
+(defn roll [new-formula]
+  (reset! formula new-formula)
+  (roll-formula))
 ;; -------------------------
 ;; View components
 
@@ -58,11 +71,14 @@
   [:li.roll {:key (:id roll)}
    [:div
     [:p.formula (:formula roll)]
-    [:p.result (:result roll)]]])
+    [:p.result (:result roll)]
+    [:p.rolls (str (:rolls roll))]]])
 
 (defn results-view []
   [:div.results
-   [:div.roll-result (-> (last-result) :result str)]
+   [:div.roll-result
+    [:p (clojure.string/join " " [(-> (last-result) :result str)
+                                  (-> (last-result) :rolls str)])]]
    [:h4 "Here are your previous rolls"]
    [:ul.rolls
     (for [r (previous-rolls)]

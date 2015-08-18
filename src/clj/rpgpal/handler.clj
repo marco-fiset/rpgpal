@@ -34,7 +34,7 @@
 
 (defroutes routes
   (GET "/" [] home-page)
-  (GET "/:formula" [formula] (edn-response (assoc (roll formula) :id (uuid))))
+  (GET "/roll/:formula" [formula] (edn-response (assoc (roll formula) :id (uuid))))
   (not-found "Not Found"))
 
 (def app
