@@ -1,5 +1,5 @@
 (ns rpgpal.roll
-  (:require [clojure.core.async :refer [go >!]]))
+  (:require [clojure.core.async :refer [go >!!]]))
 
 (defprotocol Roller
   (roll [this sides]))
@@ -13,7 +13,7 @@
   Roller
   (roll [_ sides]
     (let [result (roll roller sides)]
-      (go (>! c {:result result :sides sides}))
+      (go (>!! c {:result result :sides sides}))
       result)))
 
 (defn roll-many [roller times sides]
