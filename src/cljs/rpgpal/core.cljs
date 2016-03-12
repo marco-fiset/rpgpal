@@ -33,6 +33,9 @@
 (def avg-rolls (comp avg get-rolls))
 (def roll-distribution (comp frequencies get-rolls))
 
+(defn formulas []
+  (->> @results (map :formula) distinct))
+
 (defn roll-formula []
   (go (let [formula @formula
             response (<! (http/get (str "/roll/" formula)))
@@ -65,7 +68,17 @@
                                                            13 (roll-formula)
                                                            nil)
                                             :placeholder "Enter a dice formula"
-                                            :class       "formula-input"}]])
+                                            :class       "formula-input"}]
+   [:button {:on-click #(roll-formula) :class "roll-btn"} "Roll!"]])
+
+(defn formula-view [f]
+  [:li {:key f}
+    [:a {:on-click #(reset! formula f)} f]])
+
+(defn formulas-view [formulas]
+  [:ul.recent-formulas
+    (for [f formulas]
+      [formula-view f])])
 
 (defn roll-view [roll]
   [:li.roll {:key (:id roll)}
@@ -88,6 +101,7 @@
 
 (defn home-page []
   [:div
+   [formulas-view (take 5 (formulas))]
    [formula-input]
    [results-view]])
 

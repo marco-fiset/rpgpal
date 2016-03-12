@@ -43,7 +43,7 @@ a:hover {
 }
 
 .formula-input {
-    display: block;
+    display: inline;
     margin: auto;
     height: 50px;
     width: 80%;
@@ -54,6 +54,13 @@ a:hover {
     text-align: center;
 }
 
+.roll-btn {
+  height: 50px;
+  font-size: 34px;
+  font-family: consolas, monospace;
+  text-align: center;
+}
+
 .roll-result {
     margin-top: 30px;
     font-size: 46px;
@@ -61,13 +68,13 @@ a:hover {
 }
 
 .rolls {
-    display: -webkit-flex;
-    -webkit-flex-flow: row wrap;
+    display: flex;
+    flex-flow: wrap;
 }
 
 .roll {
-    display: -webkit-flex;
-    -webkit-flex-flow: column;
+    display: flex;
+    flex-flow: column;
 
     min-width: 90px;
     height: 100px;
@@ -97,4 +104,14 @@ a:hover {
 .roll .toggle-details {
     display:block;
     align-self: flex-end;
+}
+
+.recent-formulas {
+  text-align: center;
+  list-style-type: none;
+}
+
+.recent-formulas li {
+  display: inline;
+  margin-right: 50px;
 }
